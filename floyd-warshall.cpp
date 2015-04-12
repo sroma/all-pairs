@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
                     for (int j = 0; j < G.VortexCount; j++) G.A[i][j] = 0;
                 declared = true;
             }
-        } // p
+        } 
         if (declared && line[0] == 'a') {
             int i, j, w;
             istringstream iss(line);
@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
         }
     }    
     if (!declared) return 1;
-
+     // initialization of Predessesor and Distance Matrix
      # pragma omp parallel for
      for (int i = 0; i < G.VortexCount; i++)
         for (int j = 0; j < G.VortexCount; j++) {
