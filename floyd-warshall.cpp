@@ -1,7 +1,3 @@
-// Floyd - Warshall algorithm 
-// Parallel with OpenMP
-// Graph data stores as connectivity matrix (A)
-// Infinity = INT_MAX
 #include <iostream>
 #include <fstream>
 #include <climits>
@@ -13,15 +9,12 @@
 using namespace std;
 
 struct Graph {
-    int ** A;
+    int ** A; // Connectivetely Matrix
     int VortexCount;
     int EdgeCount;
 };
 
 // Floyd-Warshall algorithm
-// D - Matrix of Distances;
-// P - Predessesor Matrix;
-// N - Number of vertexes.
 int FloydWarshall(int ** D, int ** P, int N) {
     for (int k = 0; k < N; k++)
         #pragma omp parallel for
@@ -37,7 +30,7 @@ int FloydWarshall(int ** D, int ** P, int N) {
     return 0;
 }
 
-// Construct path between i and j vertexes
+
 void ConstructPath(int ** P, int i, int j, vector<int>& path) {
     if (i == j) {
         path.clear();
@@ -56,13 +49,13 @@ int main(int argc, char* argv[]) {
     int num_threads = (argc > 1) ? atoi(argv[1]) : 1; 
     omp_set_num_threads(num_threads);
 
-    int **P, **D;
+    int **P, **D; // Predessesors' and Distances' Matrixs
     Graph G;
     bool declared = false;
     string GraphType, token;
     vector<int> path; 
 
-    cout << endl << "Roma graph" << endl;
+    cout << endl << "Rome graph" << endl;
     ifstream fl("./roma99.gr");
     for(string line; getline(fl, line);) {
         if (line[0] == 'c') continue;
@@ -93,7 +86,7 @@ int main(int argc, char* argv[]) {
         }
     }    
     if (!declared) return 1;
-     // initialization of Predessesor and Distance Matrix
+
      # pragma omp parallel for
      for (int i = 0; i < G.VortexCount; i++)
         for (int j = 0; j < G.VortexCount; j++) {
@@ -109,11 +102,20 @@ int main(int argc, char* argv[]) {
     tm = omp_get_wtime() - tm; 
     cout << num_threads << " threads: " << tm << "s for Rome graph." << endl;
 
-    // test route
+    // print all routes from vertex #0
+    //for (int i = 0; i < G.VortexCount; i++)
+    //   cout << 0 << "-" << i << " " << D[0][i] << endl;
+
     cout << "Path 1-788, d = " << D[0][787] << endl;
     ConstructPath(P,0,787,path);    
     for (int i = 0; i < path.size(); i++) cout << path[i] + 1 << "-";
     cout << endl;
+    int s = 0;
+    for (int i = 0; i < path.size() - 1; i++){
+        cout << G.A[path[i]][path[i+1]] << "+";
+        s += G.A[path[i]][path[i+1]];
+    }
+    cout << " = " << s << endl;
 
     for (int i = 0; i < G.VortexCount; i++) {
         delete[] D[i];
