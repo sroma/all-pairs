@@ -5,4 +5,4 @@ floyd-warshall.cpp - realization of Floyd-Warshall algorithm (C++/OpenMP). Graph
 
 johnson.cpp - realization of Johnson algorithm (C++/OpenMP). Deikstra algorithm is realized on arrays. Graph is stored as array of edges.
 
-Test case: Rome graph
+Test case: Rome graph from http://www.dis.uniroma1.it/~challenge9
