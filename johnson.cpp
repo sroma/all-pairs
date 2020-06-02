@@ -108,31 +108,7 @@ int main(int argc, char* argv[]) {
     int num = 0;
     string GraphType, token;
     bool declared = false;
-    cout << endl << "Roma graph" << endl;
-    ifstream fl("./roma99.gr");
-    for(string line; getline(fl, line);) {
-        if (line[0] == 'c') continue;
-        if (line[0] == 'p') {
-            istringstream iss(line);
-            iss >> token >> GraphType >> G.VortexCount >> G.EdgeCount;
-	    
-	        if (G.VortexCount > 0 && G.EdgeCount > 0) {
-		        G.E = new Edge[G.EdgeCount];
-	    	    declared = true;
-	        }
-	    
-        } 
-        if (declared && line[0] == 'a') {
-            int i, j, w;
-            istringstream iss(line);
-            iss >> token >> i >> j >> w; 
-            G.E[num].start = i-1;
-	        G.E[num].end = j-1;
-	        G.E[num].weight = w;
-	        num++;     
-        }
-    } 
-          
+  
     double tm = omp_get_wtime(); 
 
     int ** D = new int*[G.VortexCount + 1];
@@ -165,11 +141,7 @@ int main(int argc, char* argv[]) {
     
     cout << num_threads << " threads: " << omp_get_wtime() - tm << "s for Rome graph." << endl;
     
-    // Test case
-    //for (int i = 0; i < G.VortexCount; i++)
-    //   cout << 0 << "-" << i << " " << D[0][i] - (D[G.VortexCount][0 - D[i]) << endl;
-    PrintPath(G, 0, 787, D[0][787] - (D[G.VortexCount][0 - D[787]) , P[0]); 
-    PrintPath(G, 0, 147, D[0][147] - (D[G.VortexCount][0 - D[147]) , P[0]); 
+
 
     delete[] G.E;
     delete[] G2.E;
