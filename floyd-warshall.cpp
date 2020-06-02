@@ -55,67 +55,6 @@ int main(int argc, char* argv[]) {
     string GraphType, token;
     vector<int> path; 
 
-    cout << endl << "Rome graph" << endl;
-    ifstream fl("./roma99.gr");
-    for(string line; getline(fl, line);) {
-        if (line[0] == 'c') continue;
-        if (line[0] == 'p') {
-            istringstream iss(line);
-            iss >> token >> GraphType >> G.VortexCount >> G.EdgeCount;
-
-            if (G.VortexCount > 0) {
-                D = new int*[G.VortexCount];
-                P = new int*[G.VortexCount];
-                G.A = new int*[G.VortexCount];
-                for (int i = 0; i < G.VortexCount; i++) {
-                    D[i] = new int[G.VortexCount];
-                    P[i] = new int[G.VortexCount];
-                    G.A[i] = new int[G.VortexCount];
-                }
-                #pragma omp parallel for
-                for (int i = 0; i < G.VortexCount; i++)
-                    for (int j = 0; j < G.VortexCount; j++) G.A[i][j] = 0;
-                declared = true;
-            }
-        } 
-        if (declared && line[0] == 'a') {
-            int i, j, w;
-            istringstream iss(line);
-            iss >> token >> i >> j >> w; 
-            G.A[i-1][j-1] = w;     
-        }
-    }    
-    if (!declared) return 1;
-
-     # pragma omp parallel for
-     for (int i = 0; i < G.VortexCount; i++)
-        for (int j = 0; j < G.VortexCount; j++) {
-            D[i][j] = G.A[i][j];
-            P[i][j] = i;
-            if (i != j && D[i][j] == 0) {
-                P[i][j] = -INT_MAX;
-                D[i][j] = INT_MAX;
-            }
-        }
-    double tm = omp_get_wtime(); 
-    FloydWarshall(D, P, G.VortexCount);
-    tm = omp_get_wtime() - tm; 
-    cout << num_threads << " threads: " << tm << "s for Rome graph." << endl;
-
-    // print all routes from vertex #0
-    //for (int i = 0; i < G.VortexCount; i++)
-    //   cout << 0 << "-" << i << " " << D[0][i] << endl;
-
-    cout << "Path 1-788, d = " << D[0][787] << endl;
-    ConstructPath(P,0,787,path);    
-    for (int i = 0; i < path.size(); i++) cout << path[i] + 1 << "-";
-    cout << endl;
-    int s = 0;
-    for (int i = 0; i < path.size() - 1; i++){
-        cout << G.A[path[i]][path[i+1]] << "+";
-        s += G.A[path[i]][path[i+1]];
-    }
-    cout << " = " << s << endl;
 
     for (int i = 0; i < G.VortexCount; i++) {
         delete[] D[i];
