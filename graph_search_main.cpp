@@ -149,12 +149,12 @@ void Dijkstra_arr(Graph * G, int Source, int * Distances, int * Predessesors) {
 }
 // Dijkstra alg. (associate arrays: get perfomance of O(VlogE) instead of O(V^2))
 void Dijkstra_set(Graph * G, int Source, int * Distances, int * Predessesors) {
-    set<pair<int, int> > unvisited; // set of unvisited vortices
+    set<pair<int, int>> unvisited; // set of unvisited vortices
     // start at Source
     Distances[Source] = 0;
     // none is reachable from Source
     for (auto e: G->pLists->at(Source)) Distances[e.v] = INT_MAX;
-    unvisited.emplace(0,Source);
+    unvisited.emplace(0, Source);
 
      while (!unvisited.empty()) {
          // get vortex with min distance (it is the first in set)
@@ -224,7 +224,7 @@ int main(int argc, char* argv[]) {
     // Johnson + Dijkstra (associate arr.)
     tm = omp_get_wtime();
     if (Johnson2(&G, Distances, Predessesors)) {
-        cout << "Negative cycle in graph" << endl;
+        cout << "Negative cycle is in graph" << endl;
     }
     else {
         cout << "Johnson (set in Dijkstra): "<< omp_get_wtime() - tm << "s." << endl;
